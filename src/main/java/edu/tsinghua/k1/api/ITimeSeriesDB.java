@@ -17,5 +17,4 @@ public interface ITimeSeriesDB extends Closeable {
    * @throws TimeSeriesDBException
    */
   TimeSeriesDBIterator iterator(String timeSeries, long startTime,long endTime ) throws TimeSeriesDBException;
-
 }

@@ -1,5 +1,6 @@
 package edu.tsinghua.k1;
 
+import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -11,6 +12,7 @@ public class TimeSeriesMap {
 
   private TimeSeriesMap() {
     timeSeriesToUID = new ConcurrentHashMap<>();
+    // deserialize
   }
 
   private static class InstanceHolder {
@@ -28,5 +30,13 @@ public class TimeSeriesMap {
       timeSeriesToUID.putIfAbsent(timeSeries, uid);
     }
     return timeSeriesToUID.get(timeSeries);
+  }
+
+  public void serialize(File file) {
+
+  }
+
+  public void deserialize(File file) {
+
   }
 }

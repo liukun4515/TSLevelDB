@@ -26,10 +26,15 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <!--<dependency>-->
+    <!--<groupId>org.fusesource.leveldbjni</groupId>-->
+    <!--<artifactId>leveldbjni-all</artifactId>-->
+    <!--<version>1.8</version>-->
+    <!--</dependency>-->
     <dependency>
-      <groupId>org.fusesource.leveldbjni</groupId>
-      <artifactId>leveldbjni-all</artifactId>
-      <version>1.8</version>
+      <groupId>org.iq80.leveldb</groupId>
+      <artifactId>leveldb</artifactId>
+      <version>0.11</version>
     </dependency>
   </dependencies>
 

@@ -4,9 +4,9 @@ import edu.tsinghua.k1.api.ITimeSeriesDB;
 import edu.tsinghua.k1.api.ITimeSeriesDBFactory;
 import java.io.File;
 import java.io.IOException;
-import org.fusesource.leveldbjni.JniDBFactory;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
+import org.iq80.leveldb.impl.Iq80DBFactory;
 
 /**
  * Created by liukun on 19/2/27.
@@ -26,13 +26,13 @@ public class BaseTimeSeriesDBFactory implements ITimeSeriesDBFactory {
   }
   @Override
   public ITimeSeriesDB openOrCreate(File path, Options options) throws IOException {
-    DB db = JniDBFactory.factory.open(path,options);
-    BaseTimeSeriesDB timeSeriesDB = new BaseTimeSeriesDB(db);
+    DB db = Iq80DBFactory.factory.open(path,options);
+    BaseTimeSeriesDB timeSeriesDB = new BaseTimeSeriesDB(path,db);
     return timeSeriesDB;
   }
 
   @Override
   public void destroy(File path, Options options) throws IOException {
-    JniDBFactory.factory.destroy(path,options);
+    Iq80DBFactory.factory.destroy(path,options);
   }
 }

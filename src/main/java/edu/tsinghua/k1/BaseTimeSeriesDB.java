@@ -4,6 +4,7 @@ import edu.tsinghua.k1.api.ITimeSeriesDB;
 import edu.tsinghua.k1.api.ITimeSeriesWriteBatch;
 import edu.tsinghua.k1.api.TimeSeriesDBException;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
+import java.io.File;
 import java.io.IOException;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBIterator;
@@ -15,9 +16,14 @@ import org.iq80.leveldb.WriteBatch;
 public class BaseTimeSeriesDB implements ITimeSeriesDB {
 
   private DB leveldb;
+  private File indexFile;
 
-  public BaseTimeSeriesDB(DB db) {
+  public BaseTimeSeriesDB(File path, DB db) {
     this.leveldb = db;
+    // deserialize index data
+    indexFile = new File(path, "ts_id.index");
+    UIDAllocator.getInstance().deserialize(indexFile);
+    TimeSeriesMap.getInstance().deserialize(indexFile);
   }
 
   @Override
@@ -44,6 +50,10 @@ public class BaseTimeSeriesDB implements ITimeSeriesDB {
 
   @Override
   public void close() throws IOException {
+    // serialize index data
+    indexFile.delete();
+    UIDAllocator.getInstance().serialize(indexFile);
+    TimeSeriesMap.getInstance().serialize(indexFile);
     leveldb.close();
   }
 }
