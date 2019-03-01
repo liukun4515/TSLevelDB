@@ -1,10 +1,9 @@
 package edu.tsinghua.k1;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,7 +15,7 @@ public class UIDAllocator {
 
   private UIDAllocator() {
     // deserialize
-    idGenerator = new AtomicInteger(1);
+    idGenerator = new AtomicInteger(0);
   }
 
   public int getId() {
@@ -33,25 +32,23 @@ public class UIDAllocator {
   }
 
   public void serialize(File file) throws IOException {
-    FileOutputStream outputStream = new FileOutputStream(file);
-    int nextID = idGenerator.getAndIncrement();
-    byte[] data = ByteUtils.int32TOBytes(nextID);
-    outputStream.write(data);
-    outputStream.close();
+    try (RandomAccessFile reader = new RandomAccessFile(file, "rw")) {
+      int nextID = idGenerator.getAndIncrement();
+      reader.writeInt(nextID);
+    }
   }
 
   public void deserialize(File file) {
-    FileInputStream inputStream = null;
-    try {
-      inputStream = new FileInputStream(file);
-      byte[] data = new byte[4];
-      inputStream.read(data);
+    int id = 0;
+    try (RandomAccessFile reader = new RandomAccessFile(file, "rw");) {
+      if (reader.length() >= 4) {
+        id = reader.readInt();
+      }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-//    int id =
+    idGenerator = new AtomicInteger(id);
   }
 }

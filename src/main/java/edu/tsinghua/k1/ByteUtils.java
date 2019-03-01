@@ -38,7 +38,7 @@ public class ByteUtils {
    */
   public static int bytesTOInt32(byte[] data) {
     int value = 0;
-    value |= (data[0] & 0xFF);
+    value |= (data[0]);
     value |= ((data[1] & 0xFF) << 8);
     value |= ((data[2] & 0xFF) << 16);
     value |= ((data[3] & 0xFF) << 24);
