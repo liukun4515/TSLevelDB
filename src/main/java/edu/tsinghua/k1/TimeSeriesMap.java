@@ -27,8 +27,8 @@ public class TimeSeriesMap {
     return InstanceHolder.instance;
   }
 
-  public int getUid(String timeSeries) {
-    if (!timeSeriesToUID.contains(timeSeries)) {
+  public synchronized int getUid(String timeSeries) {
+    if (!timeSeriesToUID.containsKey(timeSeries)) {
       int uid = UIDAllocator.getInstance().getId();
       timeSeriesToUID.putIfAbsent(timeSeries, uid);
     }
@@ -40,6 +40,7 @@ public class TimeSeriesMap {
       reader.seek(4);
       reader.writeInt(timeSeriesToUID.size());
       for (Map.Entry<String, Integer> entry : timeSeriesToUID.entrySet()) {
+        System.out.println("ser key value: " + entry.getKey() + " " + entry.getValue());
         reader.writeUTF(entry.getKey());
         reader.writeInt(entry.getValue());
       }
@@ -52,10 +53,12 @@ public class TimeSeriesMap {
         // skip id
         reader.seek(4);
         int size = reader.readInt();
+        System.out.println("size " + size);
         timeSeriesToUID = new ConcurrentHashMap<>();
         for (int i = 0; i < size; i++) {
           String key = reader.readUTF();
           int value = reader.readInt();
+          System.out.println("deser key value:" + key + " " + value);
           timeSeriesToUID.put(key, value);
         }
       }

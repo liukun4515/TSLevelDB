@@ -19,7 +19,8 @@ public class UIDAllocator {
   }
 
   public int getId() {
-    return idGenerator.getAndIncrement();
+    int value = idGenerator.getAndIncrement();
+    return value;
   }
 
   private static class InstanceHolder {
@@ -43,6 +44,7 @@ public class UIDAllocator {
     try (RandomAccessFile reader = new RandomAccessFile(file, "rw");) {
       if (reader.length() >= 4) {
         id = reader.readInt();
+        System.out.println("recovered id"+ id);
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();

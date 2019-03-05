@@ -28,6 +28,27 @@ public class ByteUtils {
     return data;
   }
 
+  public static long getTime(byte[] time) {
+    long value = 0;
+    for (int i = 0; i < time.length; i++) {
+      value |= (((long) (time[i] & 0xFF)) << 8 * i);
+    }
+    return value;
+  }
+
+  public static byte[] getTimeBytes(long time) {
+    byte[] data = new byte[8];
+    data[7] = (byte) (time);
+    data[6] = (byte) (time >>> 8);
+    data[5] = (byte) (time >>> 16);
+    data[4] = (byte) (time >>> 24);
+    data[3] = (byte) (time >>> 32);
+    data[2] = (byte) (time >>> 40);
+    data[1] = (byte) (time >>> 48);
+    data[0] = (byte) (time >>> 56);
+    return data;
+  }
+
   public static byte[] getValue(String value) {
     return value.getBytes();
   }
@@ -38,7 +59,7 @@ public class ByteUtils {
    */
   public static int bytesTOInt32(byte[] data) {
     int value = 0;
-    value |= (data[0]);
+    value |= (data[0] & 0xFF);
     value |= ((data[1] & 0xFF) << 8);
     value |= ((data[2] & 0xFF) << 16);
     value |= ((data[3] & 0xFF) << 24);
@@ -53,5 +74,25 @@ public class ByteUtils {
     data[2] = (byte) (value >>> 16);
     data[3] = (byte) (value >>> 24);
     return data;
+  }
+
+  public static void main(String[] args) {
+//    int value = 127;
+//    System.out.println(Integer.toBinaryString(128));
+//    System.out.println(Integer.toBinaryString(value));
+//    // 截取低八位
+//    byte a = (byte) value;
+//    byte b = (byte) 128;
+//    System.out.println();
+    for (int i = -128; i <= 127; i++) {
+      // 从-128到-1，都是错误的，因为符号位都在最高位上
+      byte b = (byte) i;
+      int value = b & 0xFF;
+      // byte 转为int，那么最大就是全部 bit都是1的情况
+      if (value != i) {
+        System.out.println("diff: " + i + "  " + value);
+      }
+    }
+
   }
 }

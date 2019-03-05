@@ -39,7 +39,7 @@ public class BaseTimeSeriesDBIteration implements TimeSeriesDBIterator {
     this.endKey = endKey;
     this.iterator = iterator;
     // seek to the start key
-    iterator.seek(startKey);
+    this.iterator.seek(startKey);
     // Get the first value
     getNext();
   }
