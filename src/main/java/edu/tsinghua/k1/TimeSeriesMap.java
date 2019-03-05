@@ -57,7 +57,6 @@ public class TimeSeriesMap {
       if (reader.length() >= 8) {
         // skip id
         reader.seek(4);
-        int size = reader.readInt();
         byte[] bytes = new byte[(int) (reader.length() - 4)];
         reader.readFully(bytes);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
