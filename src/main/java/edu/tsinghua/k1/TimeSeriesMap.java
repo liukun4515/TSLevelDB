@@ -1,8 +1,12 @@
 package edu.tsinghua.k1;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,12 +42,13 @@ public class TimeSeriesMap {
   public void serialize(File file) throws IOException {
     try (RandomAccessFile reader = new RandomAccessFile(file, "rw")) {
       reader.seek(4);
-      reader.writeInt(timeSeriesToUID.size());
-      for (Map.Entry<String, Integer> entry : timeSeriesToUID.entrySet()) {
-        System.out.println("ser key value: " + entry.getKey() + " " + entry.getValue());
-        reader.writeUTF(entry.getKey());
-        reader.writeInt(entry.getValue());
+      ByteOutputStream outputStream = new ByteOutputStream();
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+      objectOutputStream.writeObject(this.timeSeriesToUID);
+      for (Map.Entry<String, Integer> entry : this.timeSeriesToUID.entrySet()) {
+        System.out.println("ser2.0 key value: " + entry.getKey() + " " + entry.getValue());
       }
+      reader.write(outputStream.getBytes());
     }
   }
 
@@ -53,18 +58,20 @@ public class TimeSeriesMap {
         // skip id
         reader.seek(4);
         int size = reader.readInt();
-        System.out.println("size " + size);
-        timeSeriesToUID = new ConcurrentHashMap<>();
-        for (int i = 0; i < size; i++) {
-          String key = reader.readUTF();
-          int value = reader.readInt();
-          System.out.println("deser key value:" + key + " " + value);
-          timeSeriesToUID.put(key, value);
+        byte[] bytes = new byte[(int) (reader.length() - 4)];
+        reader.readFully(bytes);
+        ByteInputStream inputStream = new ByteInputStream(bytes, bytes.length);
+        ObjectInputStream ObjectInputStream = new ObjectInputStream(inputStream);
+        this.timeSeriesToUID = (ConcurrentHashMap<String, Integer>) ObjectInputStream.readObject();
+        for (Map.Entry<String, Integer> entry : this.timeSeriesToUID.entrySet()) {
+          System.out.println("des2.0 key value: " + entry.getKey() + " " + entry.getValue());
         }
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
   }
