@@ -1,7 +1,7 @@
 package edu.tsinghua.k1.example.ConcurrentInsert;
 
 
-import edu.tsinghua.k1.BaseTimeSeriesDBFactory;
+import edu.tsinghua.k1.leveldb.BaseTimeSeriesDBFactory;
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.TimeSeriesMap;
 import edu.tsinghua.k1.api.ITimeSeriesDB;

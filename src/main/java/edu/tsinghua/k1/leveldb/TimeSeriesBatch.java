@@ -1,5 +1,7 @@
-package edu.tsinghua.k1;
+package edu.tsinghua.k1.leveldb;
 
+import edu.tsinghua.k1.ByteUtils;
+import edu.tsinghua.k1.TimeSeriesMap;
 import edu.tsinghua.k1.api.ITimeSeriesWriteBatch;
 import org.iq80.leveldb.WriteBatch;
 

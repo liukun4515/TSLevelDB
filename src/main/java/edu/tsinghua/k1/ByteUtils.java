@@ -75,24 +75,5 @@ public class ByteUtils {
     data[3] = (byte) (value >>> 24);
     return data;
   }
-
-  public static void main(String[] args) {
-//    int value = 127;
-//    System.out.println(Integer.toBinaryString(128));
-//    System.out.println(Integer.toBinaryString(value));
-//    // 截取低八位
-//    byte a = (byte) value;
-//    byte b = (byte) 128;
-//    System.out.println();
-    for (int i = -128; i <= 127; i++) {
-      // 从-128到-1，都是错误的，因为符号位都在最高位上
-      byte b = (byte) i;
-      int value = b & 0xFF;
-      // byte 转为int，那么最大就是全部 bit都是1的情况
-      if (value != i) {
-        System.out.println("diff: " + i + "  " + value);
-      }
-    }
-
-  }
 }
+

@@ -1,4 +1,4 @@
-package edu.tsinghua.k1;
+package edu.tsinghua.k1.leveldb;
 
 import edu.tsinghua.k1.api.TimeSeriesDBException;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;

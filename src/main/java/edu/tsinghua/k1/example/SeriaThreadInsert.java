@@ -1,6 +1,6 @@
 package edu.tsinghua.k1.example;
 
-import edu.tsinghua.k1.BaseTimeSeriesDBFactory;
+import edu.tsinghua.k1.leveldb.BaseTimeSeriesDBFactory;
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.api.ITimeSeriesDB;
 import edu.tsinghua.k1.api.ITimeSeriesWriteBatch;
