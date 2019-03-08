@@ -8,11 +8,11 @@ import org.iq80.leveldb.WriteBatch;
 /**
  * Created by liukun on 19/2/27.
  */
-public class TimeSeriesBatch implements ITimeSeriesWriteBatch {
+public class LevelTimeSeriesBatch implements ITimeSeriesWriteBatch {
 
   private WriteBatch batch;
 
-  public TimeSeriesBatch(WriteBatch batch) {
+  public LevelTimeSeriesBatch(WriteBatch batch) {
     this.batch = batch;
   }
 

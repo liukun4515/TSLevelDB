@@ -11,23 +11,23 @@ import org.iq80.leveldb.impl.Iq80DBFactory;
 /**
  * Created by liukun on 19/2/27.
  */
-public class BaseTimeSeriesDBFactory implements ITimeSeriesDBFactory {
+public class LevelTimeSeriesDBFactory implements ITimeSeriesDBFactory {
 
-  private BaseTimeSeriesDBFactory(){
+  private LevelTimeSeriesDBFactory(){
 
   }
 
   private static class Holder{
-    private static BaseTimeSeriesDBFactory instance = new BaseTimeSeriesDBFactory();
+    private static LevelTimeSeriesDBFactory instance = new LevelTimeSeriesDBFactory();
   }
 
-  public static BaseTimeSeriesDBFactory getInstance(){
+  public static LevelTimeSeriesDBFactory getInstance(){
     return Holder.instance;
   }
   @Override
   public ITimeSeriesDB openOrCreate(File path, Options options) throws IOException {
     DB db = Iq80DBFactory.factory.open(path,options);
-    BaseTimeSeriesDB timeSeriesDB = new BaseTimeSeriesDB(path,db);
+    LevelTimeSeriesDB timeSeriesDB = new LevelTimeSeriesDB(path,db);
     return timeSeriesDB;
   }
 

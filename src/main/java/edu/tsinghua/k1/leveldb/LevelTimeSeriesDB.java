@@ -16,12 +16,12 @@ import org.iq80.leveldb.WriteBatch;
 /**
  * Created by liukun on 19/2/27.
  */
-public class BaseTimeSeriesDB implements ITimeSeriesDB {
+public class LevelTimeSeriesDB implements ITimeSeriesDB {
 
   private DB leveldb;
   private File indexFile;
 
-  public BaseTimeSeriesDB(File path, DB db) {
+  public LevelTimeSeriesDB(File path, DB db) {
     this.leveldb = db;
     // deserialize index data
     indexFile = new File(path, "ts_id.index");

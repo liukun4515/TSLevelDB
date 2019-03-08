@@ -9,7 +9,7 @@ import org.iq80.leveldb.DBIterator;
 /**
  * Created by liukun on 19/2/27.
  */
-public class BaseTimeSeriesDBIteration implements TimeSeriesDBIterator {
+public class LevelTimeSeriesDBIteration implements TimeSeriesDBIterator {
 
   // key比较器
   // key：timeseries identifier `+` timestamp
@@ -34,7 +34,7 @@ public class BaseTimeSeriesDBIteration implements TimeSeriesDBIterator {
   private DBIterator iterator;
   private Entry<byte[], byte[]> value;
 
-  public BaseTimeSeriesDBIteration(byte[] startKey, byte[] endKey, DBIterator iterator) {
+  public LevelTimeSeriesDBIteration(byte[] startKey, byte[] endKey, DBIterator iterator) {
     this.startKey = startKey;
     this.endKey = endKey;
     this.iterator = iterator;
