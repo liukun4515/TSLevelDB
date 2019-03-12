@@ -78,6 +78,7 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
       }
       // get new value
       iterator.next();
+      System.out.println("block??");
     }
   }
 
