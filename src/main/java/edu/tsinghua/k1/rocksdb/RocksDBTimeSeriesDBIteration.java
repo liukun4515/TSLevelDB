@@ -2,6 +2,7 @@ package edu.tsinghua.k1.rocksdb;
 
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.rocksdb.RocksIterator;
 
@@ -44,40 +45,48 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
   }
 
 
+  private class MyEntry implements Map.Entry<byte[], byte[]> {
+
+    private byte[] key;
+    private byte[] value;
+
+    public MyEntry(byte[] key, byte[] value) {
+      this.key = key;
+      this.value = value;
+    }
+
+    @Override
+    public byte[] getKey() {
+      return key;
+    }
+
+    @Override
+    public byte[] getValue() {
+      return value;
+    }
+
+    @Override
+    public byte[] setValue(byte[] value) {
+      this.value = value;
+      return value;
+    }
+  }
+
   private void getNext() {
     // reset the value
     value = null;
     if (iterator.isValid()) {
-      System.out.println("valid "+iterator.key());
-      value = new Entry<byte[], byte[]>() {
-        private byte[] key;
-        private byte[] value;
-
-        @Override
-        public byte[] getKey() {
-          this.key = iterator.key();
-          return key;
-        }
-
-        @Override
-        public byte[] getValue() {
-          this.value = iterator.value();
-          return value;
-        }
-
-        @Override
-        public byte[] setValue(byte[] value) {
-          this.value = value;
-          return value;
-        }
-      };
+      System.out.println("valid " + iterator.key());
+      byte[] key = iterator.key();
+      byte[] keyvalue = iterator.value();
+      value = new MyEntry(key, keyvalue);
       // next key > end key
       if (keyComparator.compare(value.getKey(), endKey) > 0) {
         value = null;
-        return;
+      } else {
+        // next key value
+        iterator.next();
       }
-      // get new value
-      iterator.next();
       System.out.println("block??");
     }
   }
