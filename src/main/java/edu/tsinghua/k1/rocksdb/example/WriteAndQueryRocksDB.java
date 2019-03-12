@@ -1,18 +1,23 @@
-package edu.tsinghua.k1.example;
+package edu.tsinghua.k1.rocksdb.example;
 
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.api.ITimeSeriesDB;
 import edu.tsinghua.k1.api.ITimeSeriesWriteBatch;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
-import edu.tsinghua.k1.leveldb.LevelTimeSeriesDBFactory;
+import edu.tsinghua.k1.rocksdb.RocksDBTimeSeriesDBFactory;
 import java.io.File;
 import java.io.IOException;
-import org.iq80.leveldb.Options;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
 
 /**
- * 串行数据写入，检查数据写入的正确性
+ * Created by liukun on 19/3/12.
  */
-public class SeriaThreadInsert {
+public class WriteAndQueryRocksDB {
+
+  static {
+    RocksDB.loadLibrary();
+  }
 
   static int cache_number = 10000;
   static int loop = 100;
@@ -20,10 +25,11 @@ public class SeriaThreadInsert {
   static int queryCount = 10;
 
   public static void main(String[] args) {
+
     File file = new File("timeseries-leveldb-example");
     Options options = new Options();
-    options.createIfMissing(true);
-    options.writeBufferSize(10 << 20);
+    options.setCreateIfMissing(true);
+    options.setWriteBufferSize(10<<20);
     // 根据需求配置options
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
@@ -34,7 +40,7 @@ public class SeriaThreadInsert {
     long step = 1;
     byte[] value = ByteUtils.int32TOBytes(10);
     try {
-      timeSeriesDB = LevelTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
+      timeSeriesDB = RocksDBTimeSeriesDBFactory.getInstance().openOrCreate(file,options);
       // insert data
       for (int i = 0; i < loop; i++) {
         ITimeSeriesWriteBatch batch = timeSeriesDB.createBatch();
@@ -69,5 +75,11 @@ public class SeriaThreadInsert {
         e.printStackTrace();
       }
     }
+    try {
+      RocksDBTimeSeriesDBFactory.getInstance().destroy(file,options);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
+
 }

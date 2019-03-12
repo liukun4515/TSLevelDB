@@ -25,14 +25,14 @@ public class LevelTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     return Holder.instance;
   }
   @Override
-  public ITimeSeriesDB openOrCreate(File path, Options options) throws IOException {
-    DB db = Iq80DBFactory.factory.open(path,options);
+  public ITimeSeriesDB openOrCreate(File path, Object options) throws IOException {
+    DB db = Iq80DBFactory.factory.open(path, (Options) options);
     LevelTimeSeriesDB timeSeriesDB = new LevelTimeSeriesDB(path,db);
     return timeSeriesDB;
   }
 
   @Override
-  public void destroy(File path, Options options) throws IOException {
-    Iq80DBFactory.factory.destroy(path,options);
+  public void destroy(File path, Object options) throws IOException {
+    Iq80DBFactory.factory.destroy(path, (Options) options);
   }
 }

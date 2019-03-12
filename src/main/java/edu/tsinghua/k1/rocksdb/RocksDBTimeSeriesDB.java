@@ -1,4 +1,4 @@
-package edu.tsinghua.k1.leveldb;
+package edu.tsinghua.k1.rocksdb;
 
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.TimeSeriesMap;
@@ -9,54 +9,56 @@ import edu.tsinghua.k1.api.TimeSeriesDBException;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
 import java.io.File;
 import java.io.IOException;
-import org.iq80.leveldb.DB;
-import org.iq80.leveldb.DBIterator;
-import org.iq80.leveldb.WriteBatch;
+import org.rocksdb.RocksDB;
+import org.rocksdb.RocksDBException;
+import org.rocksdb.WriteBatch;
 
 /**
- * Created by liukun on 19/2/27.
+ * Created by liukun on 19/3/12.
  */
-public class LevelTimeSeriesDB implements ITimeSeriesDB {
+public class RocksDBTimeSeriesDB implements ITimeSeriesDB {
 
-  private DB leveldb;
+  private RocksDB db;
   private File indexFile;
 
-  public LevelTimeSeriesDB(File path, DB db) {
-    this.leveldb = db;
-    // deserialize index data
-    indexFile = new File(path, "ts_id.index");
+  public RocksDBTimeSeriesDB(File path, RocksDB db) {
+    this.db = db;
+    this.indexFile = new File(path, "ts_id.index");
     UIDAllocator.getInstance().deserialize(indexFile);
     TimeSeriesMap.getInstance().deserialize(indexFile);
   }
 
   @Override
   public ITimeSeriesWriteBatch createBatch() {
-    WriteBatch batch = leveldb.createWriteBatch();
-    return new LevelTimeSeriesBatch(batch);
+    ITimeSeriesWriteBatch batch = new RocksTimeSeriesBatch(new WriteBatch());
+    return batch;
   }
 
   @Override
   public void write(ITimeSeriesWriteBatch batch) throws TimeSeriesDBException {
-    leveldb.write((WriteBatch) batch.getData());
+    try {
+      this.db.write(null, (WriteBatch) batch.getData());
+    } catch (RocksDBException e) {
+      e.printStackTrace();
+      throw new TimeSeriesDBException(e);
+    }
   }
 
   @Override
   public TimeSeriesDBIterator iterator(String timeSeries, long startTime, long endTime)
       throws TimeSeriesDBException {
-    DBIterator dbIterator = leveldb.iterator();
     byte[] startKey = ByteUtils.getKey(TimeSeriesMap.getInstance().getUid(timeSeries), startTime);
     byte[] endKey = ByteUtils.getKey(TimeSeriesMap.getInstance().getUid(timeSeries), endTime);
-    TimeSeriesDBIterator timeSeriesDBIteration = new LevelTimeSeriesDBIteration(startKey,
-        endKey, dbIterator);
-    return timeSeriesDBIteration;
+    TimeSeriesDBIterator iterator = new RocksDBTimeSeriesDBIteration(startKey, endKey,
+        this.db.newIterator());
+    return iterator;
   }
 
   @Override
   public void close() throws IOException {
-    // serialize index data
     indexFile.delete();
     UIDAllocator.getInstance().serialize(indexFile);
     TimeSeriesMap.getInstance().serialize(indexFile);
-    leveldb.close();
+    db.close();
   }
 }

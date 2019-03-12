@@ -1,9 +1,9 @@
 package edu.tsinghua.k1.example;
 
-import edu.tsinghua.k1.leveldb.BaseTimeSeriesDBFactory;
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.api.ITimeSeriesDB;
 import edu.tsinghua.k1.api.ITimeSeriesWriteBatch;
+import edu.tsinghua.k1.leveldb.LevelTimeSeriesDBFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -64,7 +64,7 @@ public class ExampleForTimeSeriesDB {
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
     try {
-      timeSeriesDB = BaseTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
+      timeSeriesDB = LevelTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
       CountDownLatch latch = new CountDownLatch(5);
       String timeseries = "root.g1.s";
       for (int i = 0; i < 5; i++) {

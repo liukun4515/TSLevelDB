@@ -1,12 +1,12 @@
 package edu.tsinghua.k1.example.ConcurrentInsert;
 
 
-import edu.tsinghua.k1.leveldb.BaseTimeSeriesDBFactory;
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.TimeSeriesMap;
 import edu.tsinghua.k1.api.ITimeSeriesDB;
 import edu.tsinghua.k1.api.ITimeSeriesWriteBatch;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
+import edu.tsinghua.k1.leveldb.LevelTimeSeriesDBFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -163,7 +163,7 @@ public class MultiThreadInsert {
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
     try {
-      timeSeriesDB = BaseTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
+      timeSeriesDB = LevelTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
       List<List<String>> ds = generateTimeSeries(device_num, sensor_num);
       // create worker
 //      insertData(ds, timeSeriesDB);

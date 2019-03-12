@@ -1,12 +1,15 @@
-package edu.tsinghua.k1.leveldb;
+package edu.tsinghua.k1.rocksdb;
 
-import edu.tsinghua.k1.api.TimeSeriesDBException;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
 import java.util.Comparator;
 import java.util.Map.Entry;
-import org.iq80.leveldb.DBIterator;
+import org.rocksdb.RocksIterator;
 
-public class LevelTimeSeriesDBIteration implements TimeSeriesDBIterator {
+/**
+ * Created by liukun on 19/3/12.
+ */
+public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
+
   // key比较器
   // key：timeseries identifier `+` timestamp
   // timeseries identifier的高字节存储在byte array的低字节中，timestamp同理
@@ -27,10 +30,10 @@ public class LevelTimeSeriesDBIteration implements TimeSeriesDBIterator {
 
   private byte[] startKey;
   private byte[] endKey;
-  private DBIterator iterator;
+  private RocksIterator iterator;
   private Entry<byte[], byte[]> value;
 
-  public LevelTimeSeriesDBIteration(byte[] startKey, byte[] endKey, DBIterator iterator) {
+  public RocksDBTimeSeriesDBIteration(byte[] startKey, byte[] endKey, RocksIterator iterator) {
     this.startKey = startKey;
     this.endKey = endKey;
     this.iterator = iterator;
@@ -40,18 +43,42 @@ public class LevelTimeSeriesDBIteration implements TimeSeriesDBIterator {
     getNext();
   }
 
+
   private void getNext() {
     // reset the value
     value = null;
-    if (iterator.hasNext()) {
-      // get new value
-      value = iterator.next();
+    if (iterator.isValid()) {
+      value = new Entry<byte[], byte[]>() {
+        private byte[] key;
+        private byte[] value;
+
+        @Override
+        public byte[] getKey() {
+          this.key = iterator.key();
+          return key;
+        }
+
+        @Override
+        public byte[] getValue() {
+          this.value = iterator.value();
+          return value;
+        }
+
+        @Override
+        public byte[] setValue(byte[] value) {
+          this.value = value;
+          return value;
+        }
+      };
       // next key > end key
       if (keyComparator.compare(value.getKey(), endKey) > 0) {
         value = null;
       }
+      // get new value
+      iterator.next();
     }
   }
+
 
   @Override
   public boolean hasNext() {
@@ -60,11 +87,6 @@ public class LevelTimeSeriesDBIteration implements TimeSeriesDBIterator {
 
   @Override
   public Entry<byte[], byte[]> next() {
-    if (value == null) {
-      throw new TimeSeriesDBException("TimeSeriesDBIterator has no more data");
-    }
-    Entry<byte[], byte[]> result = value;
-    getNext();
-    return result;
+    return value;
   }
 }
