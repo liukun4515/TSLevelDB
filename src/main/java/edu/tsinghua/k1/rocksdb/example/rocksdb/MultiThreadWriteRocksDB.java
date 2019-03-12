@@ -15,7 +15,6 @@ public class MultiThreadWriteRocksDB {
 
   private static class Worker implements Runnable {
 
-
     private RocksDB db;
     private int id;
     private CountDownLatch latch;
@@ -29,7 +28,7 @@ public class MultiThreadWriteRocksDB {
     @Override
     public void run() {
       try {
-        for (int i = id * 10000; i < (id + 1) * 10000; i++) {
+        for (int i = id * 100000; i < (id + 1) * 100000; i++) {
           WriteBatch batch = new WriteBatch();
           try {
             batch.put(new String(i + "").getBytes(), new String(i + "").getBytes());
@@ -48,7 +47,7 @@ public class MultiThreadWriteRocksDB {
     }
   }
 
-  static int client_num = 5;
+  static int client_num = 10;
 
   public static void main(String[] args) {
     RocksDB.loadLibrary();
