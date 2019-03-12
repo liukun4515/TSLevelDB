@@ -12,6 +12,7 @@ import java.io.IOException;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.rocksdb.WriteBatch;
+import org.rocksdb.WriteOptions;
 
 /**
  * Created by liukun on 19/3/12.
@@ -37,7 +38,7 @@ public class RocksDBTimeSeriesDB implements ITimeSeriesDB {
   @Override
   public void write(ITimeSeriesWriteBatch batch) throws TimeSeriesDBException {
     try {
-      this.db.write(null, (WriteBatch) batch.getData());
+      this.db.write(new WriteOptions(), (WriteBatch) batch.getData());
     } catch (RocksDBException e) {
       e.printStackTrace();
       throw new TimeSeriesDBException(e);

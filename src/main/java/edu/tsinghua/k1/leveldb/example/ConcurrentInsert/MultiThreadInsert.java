@@ -1,4 +1,4 @@
-package edu.tsinghua.k1.example.ConcurrentInsert;
+package edu.tsinghua.k1.leveldb.example.ConcurrentInsert;
 
 
 import edu.tsinghua.k1.ByteUtils;

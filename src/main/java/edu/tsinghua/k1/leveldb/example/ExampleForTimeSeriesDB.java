@@ -1,4 +1,4 @@
-package edu.tsinghua.k1.example;
+package edu.tsinghua.k1.leveldb.example;
 
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.api.ITimeSeriesDB;

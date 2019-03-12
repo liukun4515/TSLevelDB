@@ -27,6 +27,7 @@ public class WriteAndQueryRocksDB {
   public static void main(String[] args) {
 
     File file = new File("timeseries-leveldb-example");
+    // this is rocksdb options
     Options options = new Options();
     options.setCreateIfMissing(true);
     options.setWriteBufferSize(10<<20);

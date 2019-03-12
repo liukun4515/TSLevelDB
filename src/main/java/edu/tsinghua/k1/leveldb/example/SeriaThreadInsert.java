@@ -1,4 +1,4 @@
-package edu.tsinghua.k1.example;
+package edu.tsinghua.k1.leveldb.example;
 
 import edu.tsinghua.k1.ByteUtils;
 import edu.tsinghua.k1.api.ITimeSeriesDB;
@@ -21,6 +21,7 @@ public class SeriaThreadInsert {
 
   public static void main(String[] args) {
     File file = new File("timeseries-leveldb-example");
+    // this is leveldb options
     Options options = new Options();
     options.createIfMissing(true);
     options.writeBufferSize(10 << 20);
