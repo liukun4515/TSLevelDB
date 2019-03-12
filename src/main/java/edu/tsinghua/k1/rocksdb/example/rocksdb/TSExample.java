@@ -16,6 +16,7 @@ public class TSExample {
   public static void main(String[] args) {
     String timeseries = "root.d1.s0";
     Options options = new Options();
+    options.setCreateIfMissing(true);
     try {
       ITimeSeriesDB db = RocksDBTimeSeriesDBFactory.getInstance()
           .openOrCreate(new File("hello"), options);
