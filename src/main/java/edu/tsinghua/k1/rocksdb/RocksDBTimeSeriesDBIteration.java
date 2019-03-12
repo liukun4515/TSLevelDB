@@ -1,5 +1,6 @@
 package edu.tsinghua.k1.rocksdb;
 
+import edu.tsinghua.k1.api.TimeSeriesDBException;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
 import java.util.Comparator;
 import java.util.Map;
@@ -99,6 +100,11 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
 
   @Override
   public Entry<byte[], byte[]> next() {
-    return value;
+    if (value == null) {
+      throw new TimeSeriesDBException("TimeSeriesDBIterator has no more data");
+    }
+    Entry<byte[], byte[]> result = value;
+    getNext();
+    return result;
   }
 }
