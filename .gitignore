@@ -23,7 +23,8 @@
 hs_err_pid*
 
 # idea
-TSLevelDB.iml
+*.iml
+TSKeyValueDB.iml
 .idea/*
 
 # mvn

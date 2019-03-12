@@ -4,11 +4,11 @@
 
 ## 设计实现
 
-leveldb是一个基于key-value的存储引擎，为了使用leveldb来存储时间序列数据，我们需要将时间序列的存储模型映射到key-value当中。
+leveldb/RocksDB是一个基于key-value的存储引擎，为了使用leveldb/RocksDB来存储时间序列数据，我们需要将时间序列的存储模型映射到key-value当中。
 
 ### 映射关系
 
-由于leveldb是一个key-value数据存储引擎，并且key与value都是直接使用字节数组进行表示，因此需要将数据转化为字节数据的方式存储。
+由于leveldb/RocksDB是一个key-value数据存储引擎，并且key与value都是直接使用字节数组进行表示，因此需要将数据转化为字节数据的方式存储。
 
 key的表示：timeseries identifier `+` timestamp
 
@@ -22,30 +22,40 @@ value的表示：value
 
 ## 提供接口
 
+**注意：创建leveldb还是rocksdb的Factory和Options参数是不同的，使用的时候需要注意**
+
 #### 创建和销毁数据库
 
 - 创建数据库：
 
 ```
-// 创建数据库获得数据库实例
-File file = new File("timeseries-leveldb-example");
-    Options options = new Options();
-    options.createIfMissing(true);
-    // 根据需求配置options
-
-    // 创建time series db
-    ITimeSeriesDB timeSeriesDB = null;
-    try {
-      timeSeriesDB = BaseTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
-    }finally{
-      // if the is not null, close it
-    }
+      // 创建数据库获得数据库实例
+      File file = new File("timeseries-leveldb-example");
+      // 注意：根据选择创建Options
+      // leveldb 和 rocksdb的Options是不同的
+      Options options = new Options();
+      options.createIfMissing(true);
+      // 根据需求配置options
+  
+      // 创建time series db
+      ITimeSeriesDB timeSeriesDB = null;
+      try {
+        // 根据选择使用Factory
+        // Leveldb是 LevelTimeSeriesDBFactory
+        // Rocksdb是 RocksDBTimeSeriesDBFactory
+        timeSeriesDB = RocksDBTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
+      }finally{
+        // if the is not null, close it
+      }
 ```
 
 ```
-// 销毁数据库实例
-// destroy
-    BaseTimeSeriesDBFactory.getInstance().destroy(file,options);
+      // 销毁数据库实例
+      // destroy
+      // 根据选择使用Factory
+      // Leveldb是 LevelTimeSeriesDBFactory
+      // Rocksdb是 RocksDBTimeSeriesDBFactory
+      RocksDBTimeSeriesDBFactory.getInstance().destroy(file,options);
 ```
 
 #### 写入数据
@@ -64,14 +74,13 @@ File file = new File("timeseries-leveldb-example");
 #### 查询数据
 
 ```
-    // query data with range which contains data
+      // query data with range which contains data
       TimeSeriesDBIterator dbIterator = timeSeriesDB.iterator(timeseries,0,1111111);
       while(dbIterator.hasNext()){
         Map.Entry<byte[],byte[]> entry = dbIterator.next();
         String value = new String(entry.getValue());
         System.out.println(value);
       }
-
       // query data with range which does not contain data
       dbIterator = timeSeriesDB.iterator(timeseries,0,1111110);
       while(dbIterator.hasNext()){
