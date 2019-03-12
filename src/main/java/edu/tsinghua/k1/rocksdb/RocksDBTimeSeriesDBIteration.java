@@ -48,6 +48,7 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
     // reset the value
     value = null;
     if (iterator.isValid()) {
+      System.out.println("valid "+iterator.key());
       value = new Entry<byte[], byte[]>() {
         private byte[] key;
         private byte[] value;
@@ -73,6 +74,7 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
       // next key > end key
       if (keyComparator.compare(value.getKey(), endKey) > 0) {
         value = null;
+        return;
       }
       // get new value
       iterator.next();
