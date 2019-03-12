@@ -77,7 +77,6 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
     // reset the value
     value = null;
     if (iterator.isValid()) {
-      System.out.println("valid " + iterator.key());
       byte[] key = iterator.key();
       byte[] keyvalue = iterator.value();
       value = new MyEntry(key, keyvalue);
@@ -88,7 +87,6 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
         // next key value
         iterator.next();
       }
-      System.out.println("block??");
     }
   }
 
