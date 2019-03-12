@@ -6,13 +6,13 @@ import edu.tsinghua.k1.TimeSeriesMap;
 import edu.tsinghua.k1.api.ITimeSeriesDB;
 import edu.tsinghua.k1.api.ITimeSeriesWriteBatch;
 import edu.tsinghua.k1.api.TimeSeriesDBIterator;
-import edu.tsinghua.k1.leveldb.LevelTimeSeriesDBFactory;
+import edu.tsinghua.k1.rocksdb.RocksDBTimeSeriesDBFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import org.iq80.leveldb.Options;
+import org.rocksdb.Options;
 
 /**
  * 实现：
@@ -143,12 +143,6 @@ public class MultiThreadInsert {
           }
           System.out.println("vvvvv" + v);
         }
-//        for (int i = 0; i < loop; i++) {
-//          long start = cache_number * i;
-//          long end = cache_number * i + cache_number;
-//          int count = queryData(timeSeriesDB, s, start, end);
-//          System.out.println("timeseires " + s + "time " + start + " " + end + "count " + count);
-//        }
       }
     }
   }
@@ -157,19 +151,19 @@ public class MultiThreadInsert {
     File file = new File("timeseries-leveldb-example");
 
     Options options = new Options();
-    options.createIfMissing(true);
-    options.writeBufferSize(10 << 20);
+    options.setCreateIfMissing(true);
+    options.setWriteBufferSize(10<<20);
     // 根据需求配置options
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
     try {
-      timeSeriesDB = LevelTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
+      timeSeriesDB = RocksDBTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
       List<List<String>> ds = generateTimeSeries(device_num, sensor_num);
       // create worker
-//      insertData(ds, timeSeriesDB);
+      insertData(ds, timeSeriesDB);
       // query result
       queryTimeSeries(ds);
-//      queryData(ds, timeSeriesDB);
+      queryData(ds, timeSeriesDB);
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
