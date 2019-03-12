@@ -31,6 +31,7 @@ public class TSExample {
         byte[] key = iterator.next().getKey();
         byte[] value = iterator.next().getValue();
         System.out.println("get value");
+        iterator.next();
       }
       db.close();
     } catch (IOException e) {
