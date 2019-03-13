@@ -13,6 +13,7 @@ import org.rocksdb.WriteOptions;
 public class Example {
 
   public static void main(String[] args) throws RocksDBException {
+
     RocksDB.loadLibrary();
 
     String path = "test";
@@ -42,5 +43,4 @@ public class Example {
     }
     System.out.println("end");
   }
-
 }
