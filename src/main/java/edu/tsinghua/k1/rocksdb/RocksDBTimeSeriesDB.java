@@ -46,8 +46,8 @@ public class RocksDBTimeSeriesDB implements ITimeSeriesDB {
       throw new TimeSeriesDBException(e);
     } finally {
       // clear for c++ object
-//      writeOptions.close();
-//      rocksbatch.close();
+      writeOptions.close();
+      rocksbatch.close();
     }
   }
 
