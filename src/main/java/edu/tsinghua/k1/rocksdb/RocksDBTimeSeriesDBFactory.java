@@ -17,17 +17,25 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     RocksDB.loadLibrary();
   }
 
-  private static class Holder{
+  private static class Holder {
+
     private static RocksDBTimeSeriesDBFactory instance = new RocksDBTimeSeriesDBFactory();
   }
 
-  public static RocksDBTimeSeriesDBFactory getInstance(){
-    return  Holder.instance;
+  public static RocksDBTimeSeriesDBFactory getInstance() {
+    return Holder.instance;
   }
 
   @Override
   public ITimeSeriesDB openOrCreate(File path, Object options) throws IOException {
     ITimeSeriesDB db;
+    Options rocksOptions = (Options) options;
+    rocksOptions.setWriteBufferSize(128 << 20);
+    rocksOptions.setMaxWriteBufferNumber(2);
+    rocksOptions.setMaxBackgroundFlushes(1);
+    rocksOptions.setBaseBackgroundCompactions(1);
+    rocksOptions.setMinWriteBufferNumberToMerge(1);
+    rocksOptions.setTargetFileSizeBase(4 << 20);
     try {
       RocksDB rocksDB = RocksDB.open((org.rocksdb.Options) options, path.getPath());
       db = new RocksDBTimeSeriesDB(path, rocksDB);
