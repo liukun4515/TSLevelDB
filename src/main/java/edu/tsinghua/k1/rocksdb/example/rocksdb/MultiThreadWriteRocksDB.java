@@ -28,10 +28,11 @@ public class MultiThreadWriteRocksDB {
 
     @Override
     public void run() {
-      System.out.println("write data begin client: " + id);
+      System.out.println("Start writing data, client is is:" + id);
       try {
         for (int i = 0; i < loop; i++) {
           WriteBatch batch = new WriteBatch();
+          batch.setMaxBytes();
           System.out.println("client: " + id + ", loop:  " + i);
           for (int j = 0; j < cache_num; j++) {
             long time = System.nanoTime();
@@ -55,7 +56,7 @@ public class MultiThreadWriteRocksDB {
       } finally {
         latch.countDown();
       }
-      System.out.println("write data end client: " + id);
+      System.out.println("End writing data, client is is:" + id);
     }
   }
 
@@ -67,9 +68,11 @@ public class MultiThreadWriteRocksDB {
   public static void main(String[] args) {
     RocksDB.loadLibrary();
 
-    String path = "test";
+    String path = "tsrocksdb";
     Options options = new Options();
     options.setCreateIfMissing(true);
+    options.setWriteBufferSize(128<<20);
+
     RocksDB db = null;
     try {
       db = RocksDB.open(options, path);
