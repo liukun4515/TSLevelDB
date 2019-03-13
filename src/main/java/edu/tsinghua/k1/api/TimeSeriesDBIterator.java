@@ -17,4 +17,9 @@ public interface TimeSeriesDBIterator {
    */
   Map.Entry<byte[],byte[]> next();
 
+  /**
+   * Must call this function to release the resources.
+   */
+  void close();
+
 }

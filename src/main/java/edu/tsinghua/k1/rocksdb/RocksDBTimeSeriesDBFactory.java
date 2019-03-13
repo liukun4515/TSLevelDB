@@ -42,6 +42,7 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
   public void destroy(File path, Object options) throws IOException {
     try {
       RocksDB.destroyDB(path.getPath(), (Options) options);
+      ((Options) options).close();
     } catch (RocksDBException e) {
       e.printStackTrace();
       throw new IOException(e);

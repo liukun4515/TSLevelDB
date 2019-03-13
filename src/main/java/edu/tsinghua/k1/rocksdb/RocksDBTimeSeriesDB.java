@@ -38,14 +38,16 @@ public class RocksDBTimeSeriesDB implements ITimeSeriesDB {
   @Override
   public void write(ITimeSeriesWriteBatch batch) throws TimeSeriesDBException {
     WriteOptions writeOptions = new WriteOptions();
+    WriteBatch rocksbatch = (WriteBatch) batch.getData();
     try {
-      this.db.write(writeOptions, (WriteBatch) batch.getData());
+      this.db.write(writeOptions, rocksbatch);
     } catch (RocksDBException e) {
       e.printStackTrace();
       throw new TimeSeriesDBException(e);
-    }finally {
+    } finally {
       // clear for c++ object
       writeOptions.close();
+      rocksbatch.close();
     }
   }
 

@@ -67,4 +67,9 @@ public class LevelTimeSeriesDBIteration implements TimeSeriesDBIterator {
     getNext();
     return result;
   }
+
+  @Override
+  public void close() {
+    // leveldb does not need to implement
+  }
 }

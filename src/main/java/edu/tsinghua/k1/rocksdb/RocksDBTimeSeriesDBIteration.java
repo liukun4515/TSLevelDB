@@ -105,4 +105,9 @@ public class RocksDBTimeSeriesDBIteration implements TimeSeriesDBIterator {
     getNext();
     return result;
   }
+
+  @Override
+  public void close() {
+    this.iterator.close();
+  }
 }
