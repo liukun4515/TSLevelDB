@@ -28,17 +28,21 @@ public class MultiThreadWriteRocksDB {
     @Override
     public void run() {
       try {
+        int count = 0;
+        WriteBatch batch = new WriteBatch();
         for (int i = id * 100000; i < (id + 1) * 100000; i++) {
-          WriteBatch batch = new WriteBatch();
           try {
             batch.put(new String(i + "").getBytes(), new String(i + "").getBytes());
           } catch (RocksDBException e) {
             e.printStackTrace();
           }
-          try {
-            this.db.write(new WriteOptions(), batch);
-          } catch (RocksDBException e) {
-            e.printStackTrace();
+          if (count % 1000 == 0) {
+            try {
+              this.db.write(new WriteOptions(), batch);
+            } catch (RocksDBException e) {
+              e.printStackTrace();
+            }
+            batch = new WriteBatch();
           }
         }
       } finally {
@@ -74,7 +78,7 @@ public class MultiThreadWriteRocksDB {
     // query data
     RocksIterator iterator = db.newIterator();
     iterator.seekToFirst();
-    while(iterator.isValid()){
+    while (iterator.isValid()) {
       byte[] key = iterator.key();
       System.out.println(new String(key));
       iterator.next();
