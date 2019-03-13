@@ -51,7 +51,6 @@ public class MultiThreadWriteRocksDB {
           WriteOptions options = new WriteOptions();
           try {
             this.db.write(options, batch);
-            batch.close();
           } catch (RocksDBException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -59,6 +58,7 @@ public class MultiThreadWriteRocksDB {
 //            options.close();
 //            batch.close();
           }
+          batch.close();
         }
       } finally {
         latch.countDown();
