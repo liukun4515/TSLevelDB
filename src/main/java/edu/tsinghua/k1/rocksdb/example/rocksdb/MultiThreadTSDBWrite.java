@@ -34,6 +34,7 @@ public class MultiThreadTSDBWrite {
       try {
         for (int i = 0; i < loop; i++) {
           ITimeSeriesWriteBatch batch = db.createBatch();
+          System.out.println("client: " + id + ", loop:  " + i);
           for (int j = 0; j < cache_num; j++) {
             long time = System.nanoTime();
             for (int k = 0; j < sensor_num; k++) {
@@ -72,6 +73,11 @@ public class MultiThreadTSDBWrite {
 
     try {
       latch.await();
+      try {
+        db.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
