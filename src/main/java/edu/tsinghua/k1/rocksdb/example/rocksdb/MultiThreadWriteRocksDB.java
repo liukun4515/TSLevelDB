@@ -55,8 +55,8 @@ public class MultiThreadWriteRocksDB {
             e.printStackTrace();
             throw new RuntimeException(e);
           } finally {
-//            options.close();
-//            batch.close();
+            options.close();
+            batch.close();
           }
           batch.close();
         }
