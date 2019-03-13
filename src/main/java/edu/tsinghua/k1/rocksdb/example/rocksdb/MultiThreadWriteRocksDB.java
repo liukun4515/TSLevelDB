@@ -1,5 +1,7 @@
 package edu.tsinghua.k1.rocksdb.example.rocksdb;
 
+import edu.tsinghua.k1.ByteUtils;
+import edu.tsinghua.k1.TimeSeriesMap;
 import java.util.concurrent.CountDownLatch;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
@@ -18,40 +20,51 @@ public class MultiThreadWriteRocksDB {
     private RocksDB db;
     private int id;
     private CountDownLatch latch;
+    private String device;
 
     Worker(RocksDB db, int id, CountDownLatch latch) {
       this.db = db;
       this.id = id;
       this.latch = latch;
+      this.device = "root.perform." + "d" + id;
     }
 
     @Override
     public void run() {
+      System.out.println("write data begin client: " + id);
       try {
-        int count = 0;
-        WriteBatch batch = new WriteBatch();
-        for (int i = id * 10000000; i < (id + 1) * 100000; i++) {
+        for (int i = 0; i < loop; i++) {
+          WriteBatch batch = new WriteBatch();
+          System.out.println("client: " + id + ", loop:  " + i);
+          for (int j = 0; j < cache_num; j++) {
+            long time = System.nanoTime();
+            for (int k = 0; k < sensor_num; k++) {
+              String timeseries = device + "." + "s" + k;
+              byte[] key = ByteUtils.getKey(TimeSeriesMap.getInstance().getUid(timeseries), time);
+              try {
+                batch.put(key, new byte[20]);
+              } catch (RocksDBException e) {
+                e.printStackTrace();
+              }
+            }
+          }
           try {
-            batch.put(new String(i + "").getBytes(), new String(i + "").getBytes());
+            this.db.write(new WriteOptions(), batch);
           } catch (RocksDBException e) {
             e.printStackTrace();
-          }
-          if (count % 1000 == 0) {
-            try {
-              this.db.write(new WriteOptions(), batch);
-            } catch (RocksDBException e) {
-              e.printStackTrace();
-            }
-            batch = new WriteBatch();
           }
         }
       } finally {
         latch.countDown();
       }
+      System.out.println("write data end client: " + id);
     }
   }
 
-  static int client_num = 10;
+  private static int client_num = 5;
+  private static int sensor_num = 100;
+  private static int cache_num = 100;
+  private static int loop = 1000;
 
   public static void main(String[] args) {
     RocksDB.loadLibrary();
