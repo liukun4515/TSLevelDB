@@ -35,11 +35,14 @@ public class MultiThreadWriteRocksDB {
           System.out.println("client: " + id + ", loop:  " + i);
           for (int j = 0; j < cache_num; j++) {
             long time = System.nanoTime();
+            byte[] values = "test".getBytes();
             for (int k = 0; k < sensor_num; k++) {
               String timeseries = device + "." + "s" + k;
+              // encoding the key
+              // you can ignore this line
               byte[] key = ByteUtils.getKey(TimeSeriesMap.getInstance().getUid(timeseries), time);
               try {
-                batch.put(key, new byte[20]);
+                batch.put(key, values);
               } catch (RocksDBException e) {
                 e.printStackTrace();
               }
@@ -70,7 +73,7 @@ public class MultiThreadWriteRocksDB {
     String path = "tsrocksdb";
     Options options = new Options();
     options.setCreateIfMissing(true);
-    options.setWriteBufferSize(128<<20);
+    options.setWriteBufferSize(128 << 20);
 
     RocksDB db = null;
     try {
