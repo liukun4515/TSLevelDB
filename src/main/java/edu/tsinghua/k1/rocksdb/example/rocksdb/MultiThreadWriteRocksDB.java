@@ -10,9 +10,6 @@ import org.rocksdb.RocksIterator;
 import org.rocksdb.WriteBatch;
 import org.rocksdb.WriteOptions;
 
-/**
- * Created by liukun on 19/3/12.
- */
 public class MultiThreadWriteRocksDB {
 
   private static class Worker implements Runnable {
@@ -92,9 +89,13 @@ public class MultiThreadWriteRocksDB {
     // query data
     RocksIterator iterator = db.newIterator();
     iterator.seekToFirst();
+    int count = 0;
     while (iterator.isValid()) {
       byte[] key = iterator.key();
-      System.out.println(new String(key));
+      count++;
+      if (count % 10000 == 0) {
+        System.out.println(count);
+      }
       iterator.next();
     }
     System.out.println("end mul-query and write");
