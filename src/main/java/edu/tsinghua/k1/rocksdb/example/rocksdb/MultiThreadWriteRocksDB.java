@@ -32,7 +32,6 @@ public class MultiThreadWriteRocksDB {
       try {
         for (int i = 0; i < loop; i++) {
           WriteBatch batch = new WriteBatch();
-          batch.setMaxBytes();
           System.out.println("client: " + id + ", loop:  " + i);
           for (int j = 0; j < cache_num; j++) {
             long time = System.nanoTime();
