@@ -37,7 +37,7 @@ public class MultiThreadTSDBWrite {
           System.out.println("client: " + id + ", loop:  " + i);
           for (int j = 0; j < cache_num; j++) {
             long time = System.nanoTime();
-            for (int k = 0; j < sensor_num; k++) {
+            for (int k = 0; k < sensor_num; k++) {
               String timeseries = device + "." + "s" + k;
               batch.write(timeseries, time, new byte[20]);
             }
