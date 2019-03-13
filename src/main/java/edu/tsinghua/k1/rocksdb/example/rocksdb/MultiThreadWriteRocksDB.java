@@ -104,6 +104,7 @@ public class MultiThreadWriteRocksDB {
       iterator.next();
     }
     System.out.println("end mul-query and write");
+    db.close();
   }
 
 }
