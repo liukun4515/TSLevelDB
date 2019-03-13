@@ -48,11 +48,16 @@ public class MultiThreadWriteRocksDB {
               }
             }
           }
+          WriteOptions options = new WriteOptions();
           try {
-            this.db.write(new WriteOptions(), batch);
+            this.db.write(options, batch);
+            batch.close();
           } catch (RocksDBException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+          } finally {
+            options.close();
+            batch.close();
           }
         }
       } finally {
@@ -74,7 +79,6 @@ public class MultiThreadWriteRocksDB {
     Options options = new Options();
     options.setCreateIfMissing(true);
     options.setWriteBufferSize(128 << 20);
-
     RocksDB db = null;
     try {
       db = RocksDB.open(options, path);
@@ -103,6 +107,7 @@ public class MultiThreadWriteRocksDB {
       }
       iterator.next();
     }
+    iterator.close();
     System.out.println("end mul-query and write");
     db.close();
   }
