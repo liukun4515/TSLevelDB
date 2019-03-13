@@ -59,7 +59,7 @@ public class MultiThreadWriteRocksDB {
     }
   }
 
-  private static int client_num = 5;
+  private static int client_num = 1;
   private static int sensor_num = 100;
   private static int cache_num = 100;
   private static int loop = 1000;
