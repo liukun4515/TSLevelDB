@@ -30,7 +30,7 @@ public class MultiThreadWriteRocksDB {
       try {
         int count = 0;
         WriteBatch batch = new WriteBatch();
-        for (int i = id * 100000; i < (id + 1) * 100000; i++) {
+        for (int i = id * 10000000; i < (id + 1) * 100000; i++) {
           try {
             batch.put(new String(i + "").getBytes(), new String(i + "").getBytes());
           } catch (RocksDBException e) {
