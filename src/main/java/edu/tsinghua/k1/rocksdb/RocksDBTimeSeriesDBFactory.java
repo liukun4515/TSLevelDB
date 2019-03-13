@@ -35,7 +35,10 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     rocksOptions.setMaxBackgroundFlushes(1);
     rocksOptions.setBaseBackgroundCompactions(1);
     rocksOptions.setMinWriteBufferNumberToMerge(1);
-    rocksOptions.setTargetFileSizeBase(4 << 20);
+    rocksOptions.setTargetFileSizeBase(128 << 20);
+    rocksOptions.setLevel0FileNumCompactionTrigger(4);
+    rocksOptions.setMaxBytesForLevelBase(512<<20);
+    System.out.println(rocksOptions.toString());
     try {
       RocksDB rocksDB = RocksDB.open((org.rocksdb.Options) options, path.getPath());
       db = new RocksDBTimeSeriesDB(path, rocksDB);
