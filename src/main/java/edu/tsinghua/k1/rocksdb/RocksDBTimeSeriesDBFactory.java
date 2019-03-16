@@ -30,14 +30,16 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
   public ITimeSeriesDB openOrCreate(File path, Object options) throws IOException {
     ITimeSeriesDB db;
     Options rocksOptions = (Options) options;
+    // 128M memtable and l0 sstable
     rocksOptions.setWriteBufferSize(128 << 20);
     rocksOptions.setMaxWriteBufferNumber(2);
     rocksOptions.setMaxBackgroundFlushes(1);
     rocksOptions.setBaseBackgroundCompactions(1);
     rocksOptions.setMinWriteBufferNumberToMerge(1);
-    rocksOptions.setTargetFileSizeBase(128 << 20);
+    // 32MB target file
+    rocksOptions.setTargetFileSizeBase(32 << 20);
     rocksOptions.setLevel0FileNumCompactionTrigger(4);
-    rocksOptions.setMaxBytesForLevelBase(512<<20);
+    rocksOptions.setMaxBytesForLevelBase(512 << 20);
     rocksOptions.setMaxOpenFiles(1048576);
     try {
       RocksDB rocksDB = RocksDB.open((org.rocksdb.Options) options, path.getPath());
