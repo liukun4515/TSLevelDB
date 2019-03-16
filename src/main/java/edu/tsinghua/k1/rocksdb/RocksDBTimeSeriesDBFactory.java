@@ -37,7 +37,7 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     rocksOptions.setBaseBackgroundCompactions(1);
     rocksOptions.setMinWriteBufferNumberToMerge(1);
     // 32MB target file
-    rocksOptions.setTargetFileSizeBase(32 << 20);
+//    rocksOptions.setTargetFileSizeBase(32 << 20);
     rocksOptions.setLevel0FileNumCompactionTrigger(4);
     rocksOptions.setMaxBytesForLevelBase(512 << 20);
     rocksOptions.setMaxOpenFiles(1048576);
