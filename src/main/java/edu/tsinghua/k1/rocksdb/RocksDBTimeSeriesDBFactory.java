@@ -31,14 +31,14 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     ITimeSeriesDB db;
     Options rocksOptions = (Options) options;
     // 128M memtable and l0 sstable
-//    rocksOptions.setWriteBufferSize(128 << 20);
-//    rocksOptions.setMaxWriteBufferNumber(2);
-//    rocksOptions.setMaxBackgroundFlushes(1);
-//    rocksOptions.setBaseBackgroundCompactions(1);
-//    rocksOptions.setMinWriteBufferNumberToMerge(1);
-//     rocksOptions.setTargetFileSizeBase(128 << 20);
-//    rocksOptions.setLevel0FileNumCompactionTrigger(4);
-//    rocksOptions.setMaxBytesForLevelBase(512 << 20);
+    rocksOptions.setWriteBufferSize(128 << 20);
+    rocksOptions.setMaxWriteBufferNumber(2);
+    rocksOptions.setMaxBackgroundFlushes(1);
+    rocksOptions.setBaseBackgroundCompactions(1);
+    rocksOptions.setMinWriteBufferNumberToMerge(1);
+    rocksOptions.setTargetFileSizeBase(32 << 20);
+    rocksOptions.setLevel0FileNumCompactionTrigger(4);
+    rocksOptions.setMaxBytesForLevelBase(512 << 20);
     rocksOptions.setMaxOpenFiles(1048576);
     rocksOptions.setWalDir("/data2/rocksdbwal");
     try {
