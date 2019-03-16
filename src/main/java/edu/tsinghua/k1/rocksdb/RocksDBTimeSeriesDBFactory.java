@@ -41,6 +41,7 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     rocksOptions.setLevel0FileNumCompactionTrigger(4);
     rocksOptions.setMaxBytesForLevelBase(512 << 20);
     rocksOptions.setMaxOpenFiles(1048576);
+    rocksOptions.setWalDir("/data2/rocksdbwal");
     try {
       RocksDB rocksDB = RocksDB.open((org.rocksdb.Options) options, path.getPath());
       db = new RocksDBTimeSeriesDB(path, rocksDB);
