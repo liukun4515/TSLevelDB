@@ -31,7 +31,7 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     ITimeSeriesDB db;
     Options rocksOptions = (Options) options;
     // 128M memtable and l0 sstable
-    rocksOptions.setWriteBufferSize(128 << 20);
+    rocksOptions.setWriteBufferSize( 4<< 30);
     rocksOptions.setMaxWriteBufferNumber(2);
     rocksOptions.setMaxBackgroundFlushes(1);
     rocksOptions.setBaseBackgroundCompactions(4);
