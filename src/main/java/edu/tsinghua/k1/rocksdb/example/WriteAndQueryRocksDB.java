@@ -8,7 +8,6 @@ import edu.tsinghua.k1.rocksdb.RocksDBTimeSeriesDBFactory;
 import java.io.File;
 import java.io.IOException;
 import org.rocksdb.DBOptions;
-import org.rocksdb.HistogramType;
 import org.rocksdb.InfoLogLevel;
 import org.rocksdb.Logger;
 import org.rocksdb.Options;
@@ -42,7 +41,9 @@ public class WriteAndQueryRocksDB {
 
     @Override
     protected void log(InfoLogLevel infoLogLevel, String logMsg) {
-      System.out.println("rocksdb logger: " + logMsg);
+      if (infoLogLevel.equals(InfoLogLevel.INFO_LEVEL)) {
+        System.out.println("rocksdb logger: " + logMsg);
+      }
     }
   }
 
@@ -55,6 +56,7 @@ public class WriteAndQueryRocksDB {
     options.setWriteBufferSize(32 << 20);
     options.setLogger(new MyLogger(options));
     options.setStatsDumpPeriodSec(20);
+    Statistics statistics = new Statistics();
     options.setStatistics(new Statistics());
     // 根据需求配置options
     // 创建time series db
@@ -102,7 +104,7 @@ public class WriteAndQueryRocksDB {
       }
     }
     try {
-      RocksDBTimeSeriesDBFactory.getInstance().destroy(file,options);
+      RocksDBTimeSeriesDBFactory.getInstance().destroy(file, options);
     } catch (IOException e) {
       e.printStackTrace();
     }
