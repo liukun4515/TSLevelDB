@@ -55,6 +55,7 @@ public class WriteAndQueryRocksDB {
     options.setWriteBufferSize(32 << 20);
     options.setLogger(new MyLogger(options));
     options.setStatsDumpPeriodSec(20);
+    options.setStatistics(new Statistics());
     // 根据需求配置options
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
