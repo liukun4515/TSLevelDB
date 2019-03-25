@@ -7,6 +7,9 @@ import edu.tsinghua.k1.api.TimeSeriesDBIterator;
 import edu.tsinghua.k1.rocksdb.RocksDBTimeSeriesDBFactory;
 import java.io.File;
 import java.io.IOException;
+import org.rocksdb.DBOptions;
+import org.rocksdb.InfoLogLevel;
+import org.rocksdb.Logger;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.Statistics;
@@ -25,6 +28,23 @@ public class WriteAndQueryRocksDB {
   static int querystep = 100;
   static int queryCount = 10;
 
+
+  static class MyLogger extends Logger {
+
+    public MyLogger(Options options) {
+      super(options);
+    }
+
+    public MyLogger(DBOptions dboptions) {
+      super(dboptions);
+    }
+
+    @Override
+    protected void log(InfoLogLevel infoLogLevel, String logMsg) {
+      System.out.println("rocksdb logger: " + logMsg);
+    }
+  }
+
   public static void main(String[] args) {
 
     File file = new File("timeseries-leveldb-example");
@@ -32,9 +52,11 @@ public class WriteAndQueryRocksDB {
     Options options = new Options();
     options.setCreateIfMissing(true);
     options.setReportBgIoStats(true);
-    options.setWriteBufferSize(32<<20);
+    options.setWriteBufferSize(32 << 20);
     options.setReportBgIoStats(true);
+    options.setLogger(new MyLogger(options));
     options.setStatistics(new Statistics());
+    options.setStatsDumpPeriodSec(5);
     // 根据需求配置options
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
@@ -45,7 +67,7 @@ public class WriteAndQueryRocksDB {
     long step = 1;
     byte[] value = ByteUtils.int32TOBytes(10);
     try {
-      timeSeriesDB = RocksDBTimeSeriesDBFactory.getInstance().openOrCreate(file,options);
+      timeSeriesDB = RocksDBTimeSeriesDBFactory.getInstance().openOrCreate(file, options);
       // insert data
       for (int i = 0; i < loop; i++) {
         ITimeSeriesWriteBatch batch = timeSeriesDB.createBatch();
