@@ -21,7 +21,7 @@ public class WriteAndQueryRocksDB {
   }
 
   static int cache_number = 10000;
-  static int loop = 100000;
+  static int loop = 10000;
   static int querystep = 100;
   static int queryCount = 10;
 
@@ -32,7 +32,7 @@ public class WriteAndQueryRocksDB {
     Options options = new Options();
     options.setCreateIfMissing(true);
     options.setReportBgIoStats(true);
-    options.setWriteBufferSize(4<<20);
+    options.setWriteBufferSize(32<<20);
     options.setReportBgIoStats(true);
     options.setStatistics(new Statistics());
     // 根据需求配置options
