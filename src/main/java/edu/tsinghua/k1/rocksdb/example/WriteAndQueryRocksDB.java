@@ -52,10 +52,10 @@ public class WriteAndQueryRocksDB {
     Options options = new Options();
     options.setCreateIfMissing(true);
     options.setWriteBufferSize(32 << 20);
-    options.setReportBgIoStats(true);
 //    options.setLogger(new MyLogger(options));
-    options.setStatsDumpPeriodSec(20);
+//    options.setStatsDumpPeriodSec(20);
     options.setStatistics(new Statistics());
+    System.out.println(options.statistics());
     // 根据需求配置options
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
