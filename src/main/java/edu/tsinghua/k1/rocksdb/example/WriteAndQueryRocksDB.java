@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
+import org.rocksdb.Statistics;
 
 /**
  * Created by liukun on 19/3/12.
@@ -20,7 +21,7 @@ public class WriteAndQueryRocksDB {
   }
 
   static int cache_number = 10000;
-  static int loop = 100;
+  static int loop = 100000;
   static int querystep = 100;
   static int queryCount = 10;
 
@@ -30,7 +31,10 @@ public class WriteAndQueryRocksDB {
     // this is rocksdb options
     Options options = new Options();
     options.setCreateIfMissing(true);
-    options.setWriteBufferSize(10<<20);
+    options.setReportBgIoStats(true);
+    options.setWriteBufferSize(4<<20);
+    options.setReportBgIoStats(true);
+    options.setStatistics(new Statistics());
     // 根据需求配置options
     // 创建time series db
     ITimeSeriesDB timeSeriesDB = null;
@@ -76,11 +80,12 @@ public class WriteAndQueryRocksDB {
         e.printStackTrace();
       }
     }
-    try {
-      RocksDBTimeSeriesDBFactory.getInstance().destroy(file,options);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    System.out.println(options.statistics());
+//    try {
+//      RocksDBTimeSeriesDBFactory.getInstance().destroy(file,options);
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
   }
 
 }
