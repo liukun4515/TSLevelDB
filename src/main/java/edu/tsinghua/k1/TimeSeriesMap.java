@@ -31,7 +31,7 @@ public class TimeSeriesMap {
     return InstanceHolder.instance;
   }
 
-  public synchronized int getUid(String timeSeries) {
+  public int getUid(String timeSeries) {
     if (!timeSeriesToUID.containsKey(timeSeries)) {
       int uid = UIDAllocator.getInstance().getId();
       timeSeriesToUID.putIfAbsent(timeSeries, uid);
