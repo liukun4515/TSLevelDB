@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import org.rocksdb.DBOptions;
 import org.rocksdb.InfoLogLevel;
+import org.rocksdb.LRUCache;
 import org.rocksdb.Logger;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
@@ -61,7 +62,9 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     rocksOptions.setMaxBytesForLevelBase(512 << 20);
     rocksOptions.setMaxOpenFiles(1048576);
     rocksOptions.setReportBgIoStats(true);
-    rocksOptions.setWalDir("/data2/rocksdbwal");
+    // zero cache size
+    rocksOptions.setRowCache(new LRUCache(0));
+    rocksOptions.setWalDir("/data2/liukun-data");
     // set stat
     rocksOptions.setStatistics(new Statistics());
     rocksOptions.setStatsDumpPeriodSec(60);
