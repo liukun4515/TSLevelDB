@@ -64,7 +64,7 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     rocksOptions.setReportBgIoStats(true);
     // zero cache size
     rocksOptions.setRowCache(new LRUCache(0));
-    rocksOptions.setWalDir("/data2/liukun-data");
+    rocksOptions.setWalDir("/data2/liukun-data/rocksdb_wal");
     // set stat
     rocksOptions.setStatistics(new Statistics());
     rocksOptions.setStatsDumpPeriodSec(60);
