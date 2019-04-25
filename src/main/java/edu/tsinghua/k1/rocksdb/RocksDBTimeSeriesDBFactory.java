@@ -53,7 +53,7 @@ public class RocksDBTimeSeriesDBFactory implements ITimeSeriesDBFactory {
     Options rocksOptions = (Options) options;
     // 128M memtable and l0 sstable
     // distable compaction
-    rocksOptions.setDisableAutoCompactions(true);
+//    rocksOptions.setDisableAutoCompactions(true);
     rocksOptions.setWriteBufferSize(128 << 20);
     rocksOptions.setMaxWriteBufferNumber(2);
     rocksOptions.setMaxBackgroundFlushes(1);
